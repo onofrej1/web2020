@@ -2,14 +2,30 @@ import {Request, Response} from "express";
 import {getManager} from "typeorm";
 import {Post} from "../entity/Post";
 import {Category} from "../entity/Category";
+import {Page} from "../entity/Page";
+import {Menu} from "../entity/Menu";
 import {MoreThan, MoreThanOrEqual, LessThan, LessThanOrEqual, Between, In, Any, IsNull,  Like, Equal, Not} from "typeorm";
+import {MenuItem} from "../entity/MenuItem";
+import {Run} from "../entity/Run";
+import {Event} from "../entity/Event";
+import {Runner} from "../entity/Runner";
 
 const queryString = require('query-string');
 
-/*const models = {
-    'post': Post,
-    'category': Category,
-};*/
+function getRepository(name) {
+    const models = {
+        'post': Post,
+        'category': Category,
+        'page': Page,
+        'menu': Menu,
+        'menuItem': MenuItem,
+        'run': Run,
+        'runner': Runner,
+        'event': Event,
+    };
+
+    return getManager().getRepository(models[name]);
+}
 
 async function getAll(request: Request, response: Response) {
     let q = request.url.split('?');
@@ -19,7 +35,7 @@ async function getAll(request: Request, response: Response) {
     let {skip, take, select, order, include, ...search} = parsed;
     console.log(parsed);
 
-    const repo = getManager().getRepository(request.params.model);
+    const repo = getRepository(request.params.model);
 
     const ops = [Like, Not, Equal, MoreThan, MoreThanOrEqual, LessThan, LessThanOrEqual, IsNull, In, Between];
     const operators = ops.reduce((obj, op) => {
@@ -57,7 +73,7 @@ async function getAll(request: Request, response: Response) {
 
     // load a post by a given post id
     const entities = await repo.find({
-        select: select,
+        select: select ? [].concat(select) : undefined,
         where: filter,
         skip: skip,
         take: take,
@@ -69,14 +85,14 @@ async function getAll(request: Request, response: Response) {
 }
 
 async function getById(request: Request, response: Response) {
-    const repo = getManager().getRepository(request.params.model);
+    const repo = getRepository(request.params.model);
     const entity = await repo.findOneOrFail({id: request.params.id});
 
     response.send(entity);
 }
 
 async function create(request: Request, response: Response) {
-    const repo = getManager().getRepository(request.params.model);
+    const repo = getRepository(request.params.model);
     const entity = repo.create(request.body);
 
     await repo.save(entity);
@@ -85,7 +101,7 @@ async function create(request: Request, response: Response) {
 }
 
 async function update(request: Request, response: Response) {
-    const repo = getManager().getRepository(request.params.model);
+    const repo = getRepository(request.params.model);
     const entity = await repo.update(request.params.id, request.body);
 
     //await repo.save(entity);
@@ -94,7 +110,7 @@ async function update(request: Request, response: Response) {
 }
 
 async function remove(request: Request, response: Response) {
-    const repo = getManager().getRepository(request.params.model);
+    const repo = getRepository(request.params.model);
     await repo.delete(request.params.id);
 
     response.send("deleted");

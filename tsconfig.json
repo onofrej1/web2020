@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "sourceMap": true,
+    "strictPropertyInitialization": false,
     "types": [
       "node"
     ],
