@@ -12,11 +12,18 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express();
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
     app.use(bodyParser.json());
 
     // register all application routes
     AppRoutes.forEach(route => {
         app[route.method](route.path, (request: Request, response: Response, next: Function) => {
+            console.log(route);
+            console.log(request.params);
+            console.log(request.body);
+
             route.action(request, response)
                 .then(() => next)
                 .catch(err => next(err));

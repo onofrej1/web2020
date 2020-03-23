@@ -1,12 +1,14 @@
 import {postGetAllAction} from "./controller/PostGetAllAction";
 import {postGetByIdAction} from "./controller/PostGetByIdAction";
 import {postSaveAction} from "./controller/PostSaveAction";
+//import {getAll} from "./controller/ApiController";
+const apiController = require('./controller/ApiController');
 
 /**
  * All application routes.
  */
 export const AppRoutes = [
-    {
+   /* {
         path: "/posts",
         method: "get",
         action: postGetAllAction
@@ -20,5 +22,26 @@ export const AppRoutes = [
         path: "/posts",
         method: "post",
         action: postSaveAction
+    },*/
+    {
+        path: "/api2/:model/:id",
+        method: "get",
+        action: apiController.getById
+    },
+    {
+        path: "/api/:model",
+        method: "get",
+        action: apiController.getAll
+    },
+    {
+        path: "/api/:model",
+        method: "post",
+        action: apiController.create
+    },
+    {
+        path: "/api/:model/:id",
+        method: "patch",
+        action: apiController.update
     }
+
 ];

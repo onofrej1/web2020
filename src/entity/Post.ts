@@ -13,6 +13,12 @@ export class Post {
     @Column("text")
     text: string;
 
+    @Column()
+    link: string;
+
+    @Column()
+    meta: string;
+
     @ManyToMany(type => Category, {
         cascade: true
     })
