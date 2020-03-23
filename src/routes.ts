@@ -24,7 +24,7 @@ export const AppRoutes = [
         action: postSaveAction
     },*/
     {
-        path: "/api2/:model/:id",
+        path: "/api/:model/:id",
         method: "get",
         action: apiController.getById
     },
@@ -42,6 +42,10 @@ export const AppRoutes = [
         path: "/api/:model/:id",
         method: "patch",
         action: apiController.update
+    },
+    {
+        path: "/api/:model/:id",
+        method: "delete",
+        action: apiController.remove
     }
-
 ];

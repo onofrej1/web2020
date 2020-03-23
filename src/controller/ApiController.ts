@@ -93,4 +93,12 @@ async function update(request: Request, response: Response) {
     response.send("updated");
 }
 
-module.exports = {getById, getAll, create, update};
+async function remove(request: Request, response: Response) {
+    const repo = getManager().getRepository(request.params.model);
+    await repo.delete(request.params.id);
+
+    response.send("deleted");
+}
+
+
+module.exports = {getById, getAll, create, update, remove};
